@@ -1,0 +1,50 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+
+    "tasks": [
+        {
+            "label": "CMake",
+            "type": "shell",
+            "command": "cmake",
+            "options": {
+                "cwd": "${workspaceFolder}/../buildDers03"
+            },
+            "args": [
+                "${workspaceFolder}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [ "buildKlasorOlustur" ],
+       },
+        {
+            "label": "buildKlasorOlustur",
+            "type":"shell",
+            "command":"mkdir",
+            "windows": {
+                "command": "md"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "-p",
+                "buildDers03"
+            ],
+        },
+        {
+            "label": "Make",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/../buildDers03"
+            },
+            "command": "make",
+            "args": [
+                "-l"
+            ]
+        }
+    ]
+}
