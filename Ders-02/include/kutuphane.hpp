@@ -1,7 +1,7 @@
 #ifndef kutuphane_hpp
 #define kutuphane_hpp
 
-int  yardimciFonksiyon(int a,int b);
+int  topla(int a,int b);
 
 
 #endif

@@ -6,5 +6,5 @@
 int main(int argc,char** argv)
 {
 
-    std::cout<<yardimciFonksiyon(10,5)<<std::endl;
+    std::cout<<topla(10,5)<<std::endl;
 }
