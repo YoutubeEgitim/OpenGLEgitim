@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(OpenGLDers03)
+project(OpenGLDers04)
 
 set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
 

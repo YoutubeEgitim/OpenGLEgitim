@@ -9,7 +9,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../buildDers03/OpenGLDers03",
+            "program": "${workspaceFolder}/../buildDers04/OpenGLDers04",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
