@@ -3,22 +3,8 @@
 #include<glad/glad.h>
 
 #include<GLFW/glfw3.h>
-//vertex shader kaynak kodu
-char* vssource =
-"#version 330 core\n                                    \
- layout (location = 0) in vec3 inPosition;              \
- void main()                                            \    
- {                                                      \
-    gl_Position = vec4(inPosition, 1.0);                \
- }";
-//fragment shader kaynak kodu
-char* fssource =
-"#version 330 core\n                                    \
- out vec4 fragColor;                                    \
- void main()                                            \    
- {                                                      \
-    fragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);           \
- }";
+#include "shaderprogram.hpp"
+
 
 //noktalara ait koordinat bilgileri.
 float vertices[] = {
@@ -28,9 +14,7 @@ float vertices[] = {
 }; 
 
 //OpenGL nesnelerinin id değerlerini tutacak olan değişkenler
-unsigned int fragmentShader;
-unsigned int vertexShader;
-unsigned int shaderProgram;
+
 unsigned int VBO;
 unsigned int VAO;
 
@@ -64,21 +48,11 @@ int main(int argc,char** argv)
         return -1;
     } 
 
-    //vertex shader oluşsturuluyor
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vssource, NULL);
-    glCompileShader(vertexShader);
-       
-    //Fragment Shader Oluşturuluyor
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fssource, NULL);
-    glCompileShader(fragmentShader);
-    
-    //Program nesnesi oluşturuluyor ve shader nesneleri yükleniyor    
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
+    ShaderProgram program;
+
+    program.attachShader("./shaders/simplevs.glsl",GL_VERTEX_SHADER);
+    program.attachShader("./shaders/simplefs.glsl",GL_FRAGMENT_SHADER);
+    program.link();
 
     //vertex array object oluşturuluyor
     glGenVertexArrays(1, &VAO); 
@@ -104,7 +78,7 @@ int main(int argc,char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
         
         //çizimde kullanılacak olan program nesnesi aktif ediliyor
-        glUseProgram(shaderProgram);
+        program.use();
         //çizimde kullanılacak olan Vertex array object aktif ediliyor
         glBindVertexArray(VAO);
         //çizim komutu gönderiliyor
