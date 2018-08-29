@@ -29,14 +29,7 @@ void ShaderProgram::use()
 {
     glUseProgram(m_ProgramId);
 }
-void ShaderProgram::addVariable(const std::string& varName)
-{
-    m_UniformMap[varName] = glGetUniformLocation(m_ProgramId, varName.c_str());
-}
-void ShaderProgram::setFloat(const std::string& varName,float value)
-{
-      glUniform1f(m_UniformMap[varName],value);
-}
+
 void ShaderProgram::attachShader(const char* fileName,unsigned int shaderType)
 {
     unsigned int shaderId = glCreateShader(shaderType);

@@ -20,21 +20,7 @@ float vertices[] = {
 
 unsigned int VBO;
 unsigned int VAO;
-float x =0;
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE)
-        glfwTerminate();
 
-    if(key==GLFW_KEY_LEFT)
-    {
-        x-=0.01;
-    }
-    if(key==GLFW_KEY_RIGHT)
-    {
-        x+=0.01;
-    }
-}
 int main(int argc,char** argv)
 {
     if(!glfwInit())
@@ -46,7 +32,6 @@ int main(int argc,char** argv)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     GLFWwindow* window = glfwCreateWindow(800,600,"İLk Programım",NULL,NULL);
-    glfwSetKeyCallback(window, key_callback);
     
     if(window==NULL)
     {
@@ -70,7 +55,6 @@ int main(int argc,char** argv)
     program.attachShader("./shaders/simplevs.glsl",GL_VERTEX_SHADER);
     program.attachShader("./shaders/simplefs.glsl",GL_FRAGMENT_SHADER);
     program.link();
-    program.addVariable("uMoveX");
     //vertex array object oluşturuluyor
     glGenVertexArrays(1, &VAO); 
     //vertex buffer object oluşuruluyor
@@ -96,7 +80,6 @@ int main(int argc,char** argv)
         
         //çizimde kullanılacak olan program nesnesi aktif ediliyor
         program.use();
-        program.setFloat("uMoveX",x);
         
         //çizimde kullanılacak olan Vertex array object aktif ediliyor
         glBindVertexArray(VAO);
