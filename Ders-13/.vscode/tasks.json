@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+
+    "tasks": [
+        {
+            "label": "CMake",
+            "type": "shell",
+            "command": "cmake",
+            "options": {
+                "cwd": "${workspaceFolder}/../buildDers13"
+            },
+            "args": [
+                "${workspaceFolder}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [ "buildKlasorOlustur" ],
+       },
+        {
+            "label": "buildKlasorOlustur",
+            "type":"shell",
+            "command":"mkdir",
+            "windows": {
+                "command": "md"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "-p",
+                "buildDers13"
+            ],
+        },
+        {
+            "label": "Make",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/../buildDers13"
+            },
+            "command": "make",
+            "args": [
+                "-l"
+            ]
+        }
+    ]
+}
