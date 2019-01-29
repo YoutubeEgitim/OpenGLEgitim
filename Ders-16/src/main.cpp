@@ -8,47 +8,51 @@
 #include<vector>
 #include<cmath>
 #include "shaderprogram.hpp"
+#include "square.hpp"
+
 
 std::vector<glm::vec3>      vertices;
-
+std::vector<unsigned int>   indices;
 
 unsigned int VBO;
 unsigned int VAO;
+unsigned int EBO;   //index buffer'ın id değerini tutacak
 
-
-void buildCircle(float radius,int vertexCount)
+//dairenin koordinatları ve index değerlerini hesaplıyan fonksiyon.
+//ilk parametre yarıçap ikinci parametre dairenin detay değerini belirtmektedir.
+void buildCircle(float radius,int detailValue)
 {
-    float angle = 360.0f/vertexCount;
+    if(detailValue<=0)
+        detailValue = 1;
 
-    int triangleCount = vertexCount-2;
-    
-    std::vector<glm::vec3>   tempVertices;
+    int vertexCount = 4*detailValue;
+    int triCount    = vertexCount-2;
+    float angle     = 360.0f/vertexCount;
 
+    //koordinat bilgileri hesaplanıyor
     for(int i=0;i<vertexCount;i++)
     {
-        float newAngle = angle*i;  
+        glm::vec3 nextPos;
+        float nextAngle = angle*i;
+        nextPos.x = radius*glm::cos(glm::radians(nextAngle));
+        nextPos.y = radius*glm::sin(glm::radians(nextAngle));
+        nextPos.z = 0.0f;
+        vertices.push_back(nextPos);
 
-        float x= radius*cos(glm::radians(newAngle));
-
-        float y= radius*sin(glm::radians(newAngle));
         
-        float z = 0.0f;
-
-        tempVertices.push_back(glm::vec3(x,y,z));
-
     }
 
-
-    for(int i=0;i<triangleCount;i++)
+    //index değerleri hesaplanıyor
+    for(int i =0;i<triCount;i++)
     {
-        vertices.push_back(tempVertices[0]);
-        vertices.push_back(tempVertices[i+1]);
-        vertices.push_back(tempVertices[i+2]);
+        int index = i;
+
+        indices.push_back(0);
+        indices.push_back(index+1);
+        indices.push_back(index+2);
+        
     }
-
 }
-
-
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -57,25 +61,30 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         glfwTerminate();   
     if(action==GLFW_PRESS)
     {
-        if(key==GLFW_KEY_LEFT)  
+       
         {
-           
+            
+            if(key==GLFW_KEY_LEFT)  
+            {
+               
+            }
+            if(key==GLFW_KEY_RIGHT) 
+            {
+                
+            }    
+            if(key==GLFW_KEY_UP)  
+            {
+                
+            }
+            if(key==GLFW_KEY_DOWN) 
+            {
+                
+            }                
         }
-        if(key==GLFW_KEY_RIGHT) 
-        {
-            
-        }    
-        if(key==GLFW_KEY_UP)  
-        {
-            
-        }
-        if(key==GLFW_KEY_DOWN) 
-        {
-            
-        }                
-    
+        
         if(key==GLFW_KEY_SPACE)
         {
+
         }    
            
     }  
@@ -110,9 +119,9 @@ int main(int argc,char** argv)
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     } 
-
-
-    buildCircle(1,4);
+    
+    //**********daire oluşturuluyor**************///////
+    buildCircle(1,32);
 
     ShaderProgram program;
 
@@ -128,6 +137,8 @@ int main(int argc,char** argv)
 
     glGenBuffers(1,&VBO);
 
+    glGenBuffers(1, &EBO);
+   
     glBindVertexArray(VAO);
     
     glBindBuffer(GL_ARRAY_BUFFER,VBO);
@@ -140,6 +151,9 @@ int main(int argc,char** argv)
     glEnableVertexAttribArray(0); 
     
     
+    //daireye ait index değerleri index buffer'a kopyalanıyor.
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW); 
    
     while(!glfwWindowShouldClose(window))
     {
@@ -157,8 +171,9 @@ int main(int argc,char** argv)
         program.setVec3("uMove",glm::vec3(0.0f,0.0f,0.0f));
         program.setVec4("uColor",glm::vec4(1.0f,0.0f,0.0f,1.0f));
        
-        glDrawArrays(GL_TRIANGLES, 0,vertices.size());
-
+        //daire index buffer kullanılarak kopyalanıyor.
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        
         std::this_thread::sleep_for (std::chrono::milliseconds(70));
 
         glfwSwapBuffers(window);
