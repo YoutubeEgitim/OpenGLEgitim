@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(OpenGLDers17)
+project(OpenGLDers20)
 
 set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
 
@@ -12,6 +12,7 @@ set(PROJECT_SOURCES
             ${PROJECT_SOURCE_DIR}/main.cpp
             ${PROJECT_SOURCE_DIR}/shaderprogram.cpp
             ${PROJECT_SOURCE_DIR}/square.cpp
+            ${PROJECT_SOURCE_DIR}/TextureManager.cpp            
             ${PROJECT_SOURCE_DIR}/glad.c
             )
 

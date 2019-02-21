@@ -6,7 +6,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../buildDers17/OpenGLDers17",
+            "program": "${workspaceFolder}/../buildDers20/OpenGLDers20",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
