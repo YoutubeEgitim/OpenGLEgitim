@@ -5,7 +5,7 @@
 #include<map>
 #include<glm/vec3.hpp>
 #include<glm/vec4.hpp>
-#include<glm/mat4x4.hpp>
+#include<glm/mat3x3.hpp>
 class ShaderProgram
 {
 public:
@@ -26,7 +26,7 @@ public:
 
     void setVec4(const std::string& varName,const glm::vec4& value);
 
-    void setMat4(const std::string& varName,const glm::mat4* mtx);
+    void setMat3(const std::string& varName,const glm::mat3* ptrValue);  
 private:
     std::string getShaderFromFile(const char* fileName);
     

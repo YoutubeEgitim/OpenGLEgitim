@@ -7,16 +7,12 @@
 #include<GLFW/glfw3.h>
 #include<vector>
 #include<cmath>
-#include <glm/gtc/matrix_transform.hpp>
-
+#include<glm/gtx/matrix_transform_2d.hpp>
 #include "shaderprogram.hpp"
 #include "square.hpp"
 
-
 std::vector<glm::vec3>      vertices;
 std::vector<unsigned int>   indices;
-
-glm::mat4   matTransform;
 
 unsigned int VBO;
 unsigned int VAO;
@@ -125,22 +121,25 @@ int main(int argc,char** argv)
     } 
     
     //**********daire oluşturuluyor**************///////
-    buildCircle(0.5,3);
+    buildCircle(1,4);
+    
+    glm::mat3 mtxTransform(1);
 
+    float angle=0.0f;
+    
+
+
+ 
     ShaderProgram program;
 
     program.attachShader("./shaders/simplevs.glsl",GL_VERTEX_SHADER);
     program.attachShader("./shaders/simplefs.glsl",GL_FRAGMENT_SHADER);
     program.link();
 
-    program.addUniform("uMove");
-    program.addUniform("uColor");
-    program.addUniform("uTransform");
    
-    matTransform = glm::mat4(1.0f);
-
-    matTransform = glm::rotate(matTransform,glm::radians(5.0f), glm::vec3(0.0f,0.0f,1.0f));
-
+    program.addUniform("uColor");
+    program.addUniform("uMtxTransform");
+   
     glGenVertexArrays(1, &VAO); 
 
     glGenBuffers(1,&VBO);
@@ -163,13 +162,14 @@ int main(int argc,char** argv)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW); 
    
-    float aci = 1.0f;
     while(!glfwWindowShouldClose(window))
     {
         //oluşturulacak resim başlangıç rengine boyanıyor
         glClearColor(0.0f, 0.4f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         
+        mtxTransform = glm::rotate(glm::mat3(1),glm::radians(angle));
+        angle+=1.0f;
         //çizimde kullanılacak olan program nesnesi aktif ediliyor
         program.use();
   
@@ -177,21 +177,15 @@ int main(int argc,char** argv)
         glBindVertexArray(VAO);
         //çizim komutu gönderiliyor
          ///1.Kare
-        program.setVec3("uMove",glm::vec3(0.0f,0.0f,0.0f));
+        
         program.setVec4("uColor",glm::vec4(1.0f,0.0f,0.0f,1.0f));
-        program.setMat4("uTransform",&matTransform);
+        program.setMat3("uMtxTransform",&mtxTransform);
+        
         //daire index buffer kullanılarak kopyalanıyor.
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         
         std::this_thread::sleep_for (std::chrono::milliseconds(70));
-    
-        glm::mat4 matRotation   = glm::rotate(glm::mat4(1),glm::radians(aci), glm::vec3(0.0f,0.0f,1.0f));
-        glm::mat4 matTranslate  = glm::translate(glm::mat4(1),glm::vec3(0.3,0.3,0.3));
 
-        matTransform = matTranslate*matRotation;
-
-        aci++;
-        
         glfwSwapBuffers(window);
 
         glfwPollEvents();

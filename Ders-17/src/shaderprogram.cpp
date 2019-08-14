@@ -1,7 +1,9 @@
-#include"shaderprogram.hpp"
+
 #include<glad/glad.h>
 #include<fstream>
 #include<iostream>
+
+#include"shaderprogram.hpp"
 ShaderProgram::ShaderProgram()
 {
     m_ProgramId =glCreateProgram();
@@ -15,7 +17,7 @@ void ShaderProgram::link()
     glLinkProgram(m_ProgramId);
     int isLinked;
     char log[512];
-    glGetShaderiv(m_ProgramId,GL_LINK_STATUS,&isLinked);
+    glGetProgramiv(m_ProgramId,GL_LINK_STATUS,&isLinked);
 
     if(!isLinked)
     {
@@ -46,9 +48,9 @@ void ShaderProgram::setVec4(const std::string& varName,const glm::vec4& value)
 {
     glUniform4f(m_UniformVars[varName],value.r,value.g,value.b,value.a);
 }
-void ShaderProgram::setMat4(const std::string& varName,const glm::mat4* mtx)
+void ShaderProgram::setMat3(const std::string& varName,const glm::mat3* ptrValue)
 {
-    glUniformMatrix4fv(m_UniformVars[varName],1,false,(GLfloat*)mtx);
+    glUniformMatrix3fv(m_UniformVars[varName],1,false,(GLfloat*)ptrValue);
 }
 void ShaderProgram::attachShader(const char* fileName,unsigned int shaderType)
 {
