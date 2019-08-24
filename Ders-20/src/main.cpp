@@ -22,17 +22,13 @@ struct Vertex
 std::vector<Vertex>         vertices;
 std::vector<unsigned int>   indices;
 
-std::string textureNames[]={"./images/container.jpg","./images/brick.jpg"};
-
 glm::mat4   matTransform;
 
 unsigned int VBO;
 unsigned int VAO;
 unsigned int EBO;   //index buffer'ın id değerini tutacak
 
-float texMultiplier = 1.0f;
 
-unsigned int activeTexture = 0;
 
 void buildSquare(float length)
 {
@@ -74,17 +70,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             
             if(key==GLFW_KEY_LEFT)  
             {
-               texMultiplier+=1.0f;
+               
             }
             if(key==GLFW_KEY_RIGHT) 
             {
-                texMultiplier-=1.0f;
+                
             }    
             if(key==GLFW_KEY_UP)  
             {
-                activeTexture =(activeTexture+1)%2;
                 
-                std::cout<<activeTexture<<std::endl;
             }
             if(key==GLFW_KEY_DOWN) 
             {
@@ -133,8 +127,7 @@ int main(int argc,char** argv)
 
     TextureManager* textureManager = TextureManager::getInstance();
 
-    textureManager->loadTexture(textureNames[0]);
-    textureManager->loadTexture(textureNames[1]);
+    unsigned int textureId = textureManager->loadTexture("./images/container.jpg");
 
     ShaderProgram program;
 
@@ -143,9 +136,9 @@ int main(int argc,char** argv)
     program.link();
 
     program.addUniform("uMove");
+    program.addUniform("uColor");
     program.addUniform("uTransform");
-    program.addUniform("uTexMultiplier");
-    std::cout<<texMultiplier<<std::endl;
+   
     matTransform = glm::mat4(1.0f);
 
     matTransform = glm::rotate(matTransform,glm::radians(5.0f), glm::vec3(0.0f,0.0f,1.0f));
@@ -185,14 +178,15 @@ int main(int argc,char** argv)
         //çizimde kullanılacak olan program nesnesi aktif ediliyor
         program.use();
         
-        textureManager->activateTexture(textureNames[activeTexture]);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureId);
         //çizimde kullanılacak olan Vertex array object aktif ediliyor
         glBindVertexArray(VAO);
         //çizim komutu gönderiliyor
          ///1.Kare
         program.setVec3("uMove",glm::vec3(0.0f,0.0f,0.0f));
+        program.setVec4("uColor",glm::vec4(1.0f,0.0f,0.0f,1.0f));
         program.setMat4("uTransform",&matTransform);
-        program.setFloat("uTexMultiplier",texMultiplier);
         //daire index buffer kullanılarak kopyalanıyor.
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         

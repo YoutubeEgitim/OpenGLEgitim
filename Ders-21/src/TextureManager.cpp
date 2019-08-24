@@ -12,6 +12,14 @@ void TextureManager::initialize()
 {
 
 }
+void TextureManager::activateTexture(std::string fileName)
+{
+    if(m_TextureMap.count(fileName)!=0)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_TextureMap[fileName]);
+    }
+}
 unsigned int TextureManager::loadTexture(std::string fileName)
 {
     

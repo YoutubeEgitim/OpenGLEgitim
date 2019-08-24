@@ -7,9 +7,7 @@ class TextureManager
 public:
     static TextureManager* getInstance();
 
-    unsigned int    loadTexture(std::string fileName);
-
-    void            activateTexture(std::string fileName);
+    unsigned int loadTexture(std::string fileName);
 private:
             TextureManager();
     void    initialize();

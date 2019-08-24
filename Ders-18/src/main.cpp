@@ -7,58 +7,58 @@
 #include<GLFW/glfw3.h>
 #include<vector>
 #include<cmath>
-#include <glm/gtc/matrix_transform.hpp>
-
+#include<glm/gtx/matrix_transform_2d.hpp>
 #include "shaderprogram.hpp"
 #include "square.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
-struct Vertex
-{
-    glm::vec3   pos;
-    glm::vec2   tex;
-};
-
-std::vector<Vertex>         vertices;
+std::vector<glm::vec3>      vertices;
 std::vector<unsigned int>   indices;
 
-glm::mat4   matTransform;
+float angle;
+glm::vec2 position;
+float scale;
+
 
 unsigned int VBO;
 unsigned int VAO;
 unsigned int EBO;   //index buffer'ın id değerini tutacak
 
-
-
-void buildSquare(float length)
+//dairenin koordinatları ve index değerlerini hesaplıyan fonksiyon.
+//ilk parametre yarıçap ikinci parametre dairenin detay değerini belirtmektedir.
+void buildCircle(float radius,int detailValue)
 {
-    Vertex v0,v1,v2,v3;
-    v0.pos = glm::vec3(-length/2,length/2,0.0f);
-    v1.pos = glm::vec3(-length/2,-length/2,0.0f);
-    v2.pos = glm::vec3(length/2,-length/2,0.0f);
-    v3.pos = glm::vec3(length/2,length/2,0.0f);
+    if(detailValue<=0)
+        detailValue = 1;
 
-    v0.tex = glm::vec2(0.0f,1.0f);
-    v1.tex = glm::vec2(0.0f,0.0f);
-    v2.tex = glm::vec2(1.0f,0.0f);
-    v3.tex = glm::vec2(1.0f,1.0f);
+    int vertexCount = 4*detailValue;
+    int triCount    = vertexCount-2;
+    float angle     = 360.0f/vertexCount;
 
-    vertices.push_back(v0);
-    vertices.push_back(v1);
-    vertices.push_back(v2);
-    vertices.push_back(v3);
+    //koordinat bilgileri hesaplanıyor
+    for(int i=0;i<vertexCount;i++)
+    {
+        glm::vec3 nextPos;
+        float nextAngle = angle*i;
+        nextPos.x = radius*glm::cos(glm::radians(nextAngle));
+        nextPos.y = radius*glm::sin(glm::radians(nextAngle));
+        nextPos.z = 1.0f;
+        vertices.push_back(nextPos);
 
+        
+    }
 
-    indices.push_back(0);
-    indices.push_back(1);
-    indices.push_back(3);
-    
-    indices.push_back(1);
-    indices.push_back(2);
-    indices.push_back(3);
+    //index değerleri hesaplanıyor
+    for(int i =0;i<triCount;i++)
+    {
+        int index = i;
 
+        indices.push_back(0);
+        indices.push_back(index+1);
+        indices.push_back(index+2);
+        
+    }
 }
+
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -67,31 +67,35 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if(action==GLFW_PRESS)
     {
        
-        {
-            
-            if(key==GLFW_KEY_LEFT)  
-            {
-               
-            }
-            if(key==GLFW_KEY_RIGHT) 
-            {
-                
-            }    
-            if(key==GLFW_KEY_UP)  
-            {
-                
-            }
-            if(key==GLFW_KEY_DOWN) 
-            {
-                
-            }                
-        }
         
-        if(key==GLFW_KEY_SPACE)
+        
+        if(key==GLFW_KEY_LEFT)  
         {
-
+           position.x-=0.01;
+        }
+        if(key==GLFW_KEY_RIGHT) 
+        {
+            position.x+=0.01;
+        }    
+        if(key==GLFW_KEY_UP)  
+        {
+            position.y+=0.01;
+        }
+        if(key==GLFW_KEY_DOWN) 
+        {
+            position.y-=0.01;
+        }                
+        
+        
+        if(key==GLFW_KEY_Q)
+        {
+            scale-=0.1;
         }    
            
+        if(key==GLFW_KEY_W)
+        {
+            scale+=0.1;
+        }            
     }  
            
 }
@@ -124,43 +128,29 @@ int main(int argc,char** argv)
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     } 
-    buildSquare(1);
+    
+    //**********daire oluşturuluyor**************///////
+    buildCircle(0.2,2);
+    
+    glm::mat3 mtxTransform(1);
 
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load("./images/container.jpg", &width, &height, &nrChannels, 0); 
+    angle=0.0f;
+    position = glm::vec2(0.0f,0.0f);
+    scale = 1.0f;
+    
 
-    std::cout<<width<<","<<height<<std::endl;
-   
-    unsigned int texture;
-    
-    glGenTextures(1, &texture);  
-    
-    glBindTexture(GL_TEXTURE_2D, texture);  
-    
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   
-    stbi_image_free(data);
-    
+
+ 
     ShaderProgram program;
 
     program.attachShader("./shaders/simplevs.glsl",GL_VERTEX_SHADER);
     program.attachShader("./shaders/simplefs.glsl",GL_FRAGMENT_SHADER);
     program.link();
 
-    program.addUniform("uMove");
-    program.addUniform("uColor");
-    program.addUniform("uTransform");
    
-    matTransform = glm::mat4(1.0f);
-
-    matTransform = glm::rotate(matTransform,glm::radians(5.0f), glm::vec3(0.0f,0.0f,1.0f));
-
+    program.addUniform("uColor");
+    program.addUniform("uMtxTransform");
+   
     glGenVertexArrays(1, &VAO); 
 
     glGenBuffers(1,&VBO);
@@ -171,51 +161,46 @@ int main(int argc,char** argv)
     
     glBindBuffer(GL_ARRAY_BUFFER,VBO);
     //dairenin vertex bilgileri vertex buffer a koplayanıyor
-    glBufferData(GL_ARRAY_BUFFER,sizeof(Vertex)*vertices.size(),&vertices[0],GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(glm::vec3)*vertices.size(),&vertices[0],GL_STATIC_DRAW);
     
-   
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-     
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    
+    
     glEnableVertexAttribArray(0); 
-   
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)( 3 * sizeof(float)));
-       
-    glEnableVertexAttribArray(1);   
+    
     
     //daireye ait index değerleri index buffer'a kopyalanıyor.
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW); 
    
-    float aci = 1.0f;
     while(!glfwWindowShouldClose(window))
     {
         //oluşturulacak resim başlangıç rengine boyanıyor
         glClearColor(0.0f, 0.4f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         
+        glm::mat3 mtxRotatiton = glm::rotate(glm::mat3(1),glm::radians(angle));
+        glm::mat3 mtxTranslation = glm::translate(glm::mat3(1),position);
+        glm::mat3 mtxScale =glm::scale(glm::mat3(1),glm::vec2(scale,scale));
+        mtxTransform = mtxTranslation*mtxRotatiton*mtxScale;
+
+        angle+=1.0f;
         //çizimde kullanılacak olan program nesnesi aktif ediliyor
         program.use();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+  
         //çizimde kullanılacak olan Vertex array object aktif ediliyor
         glBindVertexArray(VAO);
         //çizim komutu gönderiliyor
          ///1.Kare
-        program.setVec3("uMove",glm::vec3(0.0f,0.0f,0.0f));
+        
         program.setVec4("uColor",glm::vec4(1.0f,0.0f,0.0f,1.0f));
-        program.setMat4("uTransform",&matTransform);
+        program.setMat3("uMtxTransform",&mtxTransform);
+        
         //daire index buffer kullanılarak kopyalanıyor.
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         
         std::this_thread::sleep_for (std::chrono::milliseconds(70));
-    
-        glm::mat4 matRotation   = glm::rotate(glm::mat4(1),glm::radians(aci), glm::vec3(0.0f,0.0f,1.0f));
-        glm::mat4 matTranslate  = glm::translate(glm::mat4(1),glm::vec3(0.3,0.3,0.3));
 
-        matTransform = matTranslate*matRotation;
-
-        aci++;
-        
         glfwSwapBuffers(window);
 
         glfwPollEvents();

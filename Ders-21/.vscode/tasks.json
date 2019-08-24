@@ -7,7 +7,7 @@
             "type": "shell",
             "command": "cmake",
             "options": {
-                "cwd": "${workspaceFolder}/../buildDers19"
+                "cwd": "${workspaceFolder}/../buildDers20"
             },
             "args": [
                 "${workspaceFolder}"
@@ -30,14 +30,14 @@
             },
             "args": [
                 "-p",
-                "buildDers19"
+                "buildDers20"
             ],
         },
         {
             "label": "Make",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/../buildDers19"
+                "cwd": "${workspaceFolder}/../buildDers20"
             },
             "command": "make",
             "args": [
