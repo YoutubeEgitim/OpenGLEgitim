@@ -7,6 +7,10 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/../buildDers12/OpenGLDers12",
+            "windows": {
+                "program": "${workspaceFolder}/../buildDers12/OpenGLDers12.exe",
+                "miDebuggerPath": "gdb.exe"
+            },            
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
