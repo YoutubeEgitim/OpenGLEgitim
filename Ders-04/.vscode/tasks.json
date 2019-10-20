@@ -6,6 +6,14 @@
             "label": "CMake",
             "type": "shell",
             "command": "cmake",
+            "windows": {
+                "command": "cmake",
+                "args": [
+                    "${workspaceFolder}",
+                    "-G",
+                    "MinGW Makefiles"
+                ]
+            },
             "options": {
                 "cwd": "${workspaceFolder}/../buildDers04"
             },
@@ -23,7 +31,11 @@
             "type":"shell",
             "command":"mkdir",
             "windows": {
-                "command": "md"
+                "command": "./KlasorOlustur.bat",
+                "args": [
+                    "buildDers04"
+                ]
+
             },
             "options": {
                 "cwd": "${workspaceFolder}/.."
