@@ -6,8 +6,16 @@
             "label": "CMake",
             "type": "shell",
             "command": "cmake",
+            "windows": {
+                "command": "cmake",
+                "args": [
+                    "${workspaceFolder}",
+                    "-G",
+                    "MinGW Makefiles"
+                ]
+            },
             "options": {
-                "cwd": "${workspaceFolder}/../buildDers18"
+                "cwd": "${workspaceFolder}/../buildDers19"
             },
             "args": [
                 "${workspaceFolder}"
@@ -23,21 +31,25 @@
             "type":"shell",
             "command":"mkdir",
             "windows": {
-                "command": "md"
+                "command": "./KlasorOlustur.bat",
+                "args": [
+                    "buildDers19"
+                ]
+
             },
             "options": {
                 "cwd": "${workspaceFolder}/.."
             },
             "args": [
                 "-p",
-                "buildDers18"
+                "buildDers19"
             ],
         },
         {
             "label": "Make",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/../buildDers18"
+                "cwd": "${workspaceFolder}/../buildDers19"
             },
             "command": "make",
             "args": [

@@ -6,7 +6,11 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../buildDers18/OpenGLDers18",
+            "program": "${workspaceFolder}/../buildDers19/OpenGLDers19",
+            "windows": {
+                "program": "${workspaceFolder}/../buildDers19/OpenGLDers19.exe",
+                "miDebuggerPath": "gdb.exe"
+            },             
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
