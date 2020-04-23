@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(OpenGLDers25)
+project(OpenGLDers27)
 
 set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
 
@@ -16,7 +16,9 @@ set(PROJECT_SOURCES
             ${PROJECT_SOURCE_DIR}/ShaderProgram.cpp
             ${PROJECT_SOURCE_DIR}/Square.cpp
             ${PROJECT_SOURCE_DIR}/TextureManager.cpp
-            ${PROJECT_SOURCE_DIR}/Mesh.cpp
+            ${PROJECT_SOURCE_DIR}/VertexArrayObject.cpp
+            ${PROJECT_SOURCE_DIR}/MeshManager.cpp   
+            ${PROJECT_SOURCE_DIR}/Mesh.cpp                      
             )
 
 set(PROJECT_HEADERS 
