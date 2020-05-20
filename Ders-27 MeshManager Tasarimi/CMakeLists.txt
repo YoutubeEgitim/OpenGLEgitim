@@ -17,8 +17,8 @@ set(PROJECT_SOURCES
             ${PROJECT_SOURCE_DIR}/Square.cpp
             ${PROJECT_SOURCE_DIR}/TextureManager.cpp
             ${PROJECT_SOURCE_DIR}/VertexArrayObject.cpp
-            ${PROJECT_SOURCE_DIR}/MeshManager.cpp   
-            ${PROJECT_SOURCE_DIR}/Mesh.cpp                      
+            ${PROJECT_SOURCE_DIR}/Mesh.cpp
+            ${PROJECT_SOURCE_DIR}/MeshManager.cpp
             )
 
 set(PROJECT_HEADERS 

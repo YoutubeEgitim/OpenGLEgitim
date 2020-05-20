@@ -1,0 +1,60 @@
+{
+    "version": "2.0.0",
+
+    "tasks": [
+        {
+            "label": "CMake",
+            "type": "shell",
+            "command": "cmake",
+            "windows": {
+                "command": "cmake",
+                "args": [
+                    "${workspaceFolder}",
+                    "-G",
+                    "MinGW Makefiles"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/../buildDers31"
+            },
+            "args": [
+                "${workspaceFolder}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [ "buildKlasorOlustur" ],
+       },
+        {
+            "label": "buildKlasorOlustur",
+            "type":"shell",
+            "command":"mkdir",
+            "windows": {
+                "command": "./KlasorOlustur.bat",
+                "args": [
+                    "buildDers31"
+                ]
+
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "-p",
+                "buildDers31"
+            ],
+        },
+        {
+            "label": "Make",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/../buildDers31"
+            },
+            "command": "make",
+            "args": [
+                "-l"
+            ]
+        }
+    ]
+}

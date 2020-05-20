@@ -1,17 +1,18 @@
 #include "MeshManager.hpp"
-#include "Mesh.hpp"
+#include "VertexTypes.hpp"
 #include "VertexArrayObject.hpp"
+#include "Mesh.hpp"
+MeshManager* MeshManager::m_Instance = nullptr;
 
-MeshManager* MeshManager::m_pInstance = nullptr;
 MeshManager::MeshManager()
 {
-    
+
 }
 Mesh* MeshManager::createCube()
 {
-    float length =1.0f;
-    Vertex3TexList    vertices;
-    IndexList   indices;
+    std::vector<Vertex3Tex>     vertices;
+    std::vector<unsigned int>   indices;
+    float length = 1.0f;
     glm::vec3 v[8];
     v[0] = glm::vec3(-length/2,-length/2,-length/2);
     v[1] = glm::vec3(length/2,-length/2,-length/2);
@@ -23,7 +24,6 @@ Mesh* MeshManager::createCube()
     v[6] = glm::vec3(length/2,length/2,length/2);
     v[7] = glm::vec3(-length/2,length/2,length/2);
     //Ust Yuzey
-
     Vertex3Tex tempVertices[24];
     tempVertices[0].pos = v[7];
     tempVertices[1].pos = v[3];
@@ -94,11 +94,11 @@ Mesh* MeshManager::createCube()
         indices.push_back(startIndex);
         indices.push_back(startIndex+2);
         indices.push_back(startIndex+3);
-    }
+    }    
 
     VertexArrayObject* vao = new VertexArrayObject();
+
     vao->build(vertices,indices);
-    m_VaoMap["cubeTex"] = vao;
 
     Mesh* mesh = new Mesh();
     mesh->m_Vao = vao;
@@ -109,8 +109,10 @@ Mesh* MeshManager::createCube()
 }
 MeshManager* MeshManager::getInstance()
 {
-    if(!m_pInstance)
-        m_pInstance = new MeshManager();
-    
-    return m_pInstance;
+    if(m_Instance=nullptr)
+    {
+        m_Instance = new MeshManager();
+    }
+
+    return m_Instance;
 }
